@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Event Tracking 2026 — Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  :root{
+    --red:#C41230; --red-dark:#9E0F26; --red-light:#FFF0F2;
+    --white:#FFFFFF; --gray-50:#F8F8F8; --gray-100:#F0F0F0;
+    --gray-200:#E2E2E2; --gray-400:#A8A8A8; --gray-500:#888888;
+    --gray-600:#606060; --gray-700:#404040; --gray-800:#242424;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%;font-family:'Sarabun',system-ui,sans-serif;color:var(--gray-800);background:var(--gray-50);-webkit-font-smoothing:antialiased}
+
+  .page{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden;padding:56px 20px 40px}
+
+  /* decorative giant watermark year */
+  .watermark{position:absolute;top:120px;left:50%;transform:translateX(-50%);font-family:'Playfair Display',serif;font-weight:900;font-size:min(38vw,480px);color:var(--red);opacity:.045;letter-spacing:-4px;white-space:nowrap;pointer-events:none;user-select:none;z-index:0}
+
+  /* soft diagonal accent */
+  .accent-line{position:absolute;top:0;right:-10%;width:60%;height:520px;background:linear-gradient(135deg, transparent 48%, var(--red-light) 48%, var(--red-light) 52%, transparent 52%);opacity:.6;pointer-events:none;z-index:0}
+
+  .eyebrow{position:relative;font-size:12px;font-weight:700;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;z-index:1}
+  .eyebrow::before,.eyebrow::after{content:'';width:24px;height:2px;background:var(--red);opacity:.5}
+
+  h1.hero{position:relative;font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(32px,5.5vw,58px);line-height:1.05;margin:0 0 12px;text-align:center;color:var(--gray-800);z-index:1}
+  h1.hero span{color:var(--red)}
+
+  .subtitle{position:relative;font-size:14.5px;color:var(--gray-600);text-align:center;max-width:520px;margin:0 0 40px;line-height:1.7;z-index:1}
+
+  /* ===== DASHBOARD ===== */
+  .dash{position:relative;z-index:1;width:100%;max-width:1000px;margin-bottom:44px}
+  .dash-label{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gray-400);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .dash-label::after{content:'';flex:1;height:1px;background:var(--gray-200)}
+  .dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+
+  .stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:16px;padding:22px 22px 20px;box-shadow:0 4px 16px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px;transition:box-shadow .2s ease, transform .2s ease}
+  .stat-card:hover{box-shadow:0 10px 26px rgba(196,18,48,.1);transform:translateY(-2px)}
+
+  .stat-top{display:flex;align-items:center;gap:10px}
+  .stat-icon{width:36px;height:36px;border-radius:10px;background:var(--red-light);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+  .stat-name{font-size:12.5px;font-weight:700;color:var(--gray-600)}
+
+  .stat-main{display:flex;align-items:baseline;gap:6px}
+  .stat-num{font-size:30px;font-weight:800;color:var(--gray-800);line-height:1;font-family:'Playfair Display',serif}
+  .stat-unit{font-size:13px;font-weight:600;color:var(--gray-500)}
+
+  .stat-sub{font-size:12px;color:var(--gray-500)}
+  .stat-sub b{color:var(--red);font-weight:700}
+
+  .bar-track{width:100%;height:6px;border-radius:4px;background:var(--gray-100);overflow:hidden;margin-top:2px}
+  .bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--red-dark),var(--red))}
+
+  .split-row{display:flex;gap:14px;margin-top:2px}
+  .split-item{flex:1;display:flex;flex-direction:column;gap:2px}
+  .split-item-label{font-size:10.5px;font-weight:700;color:var(--gray-400);display:flex;align-items:center;gap:4px;text-transform:uppercase;letter-spacing:.5px}
+  .split-item-val{font-size:19px;font-weight:800;color:var(--gray-800)}
+
+  .status-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+  .chip{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--gray-100);color:var(--gray-600)}
+  .chip.done{background:var(--red-light);color:var(--red)}
+
+  /* ===== CTA BUTTONS ===== */
+  .cta-row{position:relative;z-index:1;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:30px;font-size:14px;font-weight:700;text-decoration:none;transition:transform .2s ease, box-shadow .2s ease}
+  .btn i{font-size:16px}
+  .btn-primary{background:var(--red);color:#fff;box-shadow:0 6px 18px rgba(196,18,48,.25)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(196,18,48,.34);background:var(--red-dark)}
+  .btn-secondary{background:var(--white);color:var(--red);border:1.5px solid var(--red-light)}
+  .btn-secondary:hover{transform:translateY(-2px);border-color:var(--red);box-shadow:0 8px 20px rgba(0,0,0,.06)}
+
+  .footer-note{position:relative;z-index:1;margin-top:40px;font-size:11.5px;color:var(--gray-400);text-align:center;letter-spacing:.3px}
+  .footer-note b{color:var(--red);font-weight:700}
+
+  @media (max-width:720px){
+    .dash-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="accent-line"></div>
+    <div class="watermark">2026</div>
+
+    <div class="eyebrow">FMCG · Brand Event</div>
+    <h1 class="hero">Brand Event <span>Tracking</span> 2026</h1>
+    <p class="subtitle">ระบบติดตามอีเวนต์แบรนด์ — ตั้งแต่งบประมาณ, PO/Contract ไปจนถึงภาพรวม Timeline ของทั้งทีม</p>
+
+    <!-- ===== DASHBOARD SUMMARY ===== -->
+    <div class="dash">
+      <div class="dash-label">Overview</div>
+      <div class="dash-grid">
+
+        <!-- Card 1: Task Progress -->
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon"><i class="ti ti-calendar-event"></i></div>
+            <div class="stat-name">งานทั้งหมด</div>
+          </div>
+          <div class="stat-main"><span class="stat-num">21</span><span class="stat-unit">งาน</span></div>
+          <div class="stat-sub">เกิดขึ้นแล้ว <b>10 งาน</b> (48%)</div>
+          <div class="bar-track"><div class="bar-fill" style="width:48%"></div></div>
+          <div class="status-chips">
+            <span class="chip done">✓ Completed 10</span>
+            <span class="chip">Planned 9</span>
+            <span class="chip">Postponed 2</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Budget -->
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon"><i class="ti ti-wallet"></i></div>
+            <div class="stat-name">Financial Budget</div>
+          </div>
+          <div class="stat-main"><span class="stat-num">฿2.38M</span></div>
+          <div class="stat-sub">ใช้ไปแล้ว <b>50%</b> จากงบทั้งหมด ฿4.8M</div>
+          <div class="bar-track"><div class="bar-fill" style="width:50%"></div></div>
+        </div>
+
+        <!-- Card 3: Performance -->
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon"><i class="ti ti-chart-bar"></i></div>
+            <div class="stat-name">Performance</div>
+          </div>
+          <div class="split-row">
+            <div class="split-item">
+              <div class="split-item-label"><i class="ti ti-eye"></i> Reach</div>
+              <div class="split-item-val">61.4K</div>
+            </div>
+            <div class="split-item">
+              <div class="split-item-label"><i class="ti ti-message-dots"></i> Engagement</div>
+              <div class="split-item-val">8.4K</div>
+            </div>
+          </div>
+          <div class="stat-sub">จากงานที่เกิดขึ้นแล้ว 10 งาน</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== CTA BUTTONS ===== -->
+    <div class="cta-row">
+      <a class="btn btn-primary" href="./member-workspace-DEMO-Bootcamp.html">
+        <i class="ti ti-wallet"></i> เข้าสู่ Member Workspace
+      </a>
+      <a class="btn btn-secondary" href="./wip-timeline-DEMO-Bootcamp.html">
+        <i class="ti ti-timeline"></i> WIP MEETING
+      </a>
+    </div>
+
+    <div class="footer-note">🎓 <b>Demo / Bootcamp</b> — ข้อมูลทั้งหมด (รวมถึง Dashboard) เป็นข้อมูลสมมติ สร้างขึ้นเพื่อการสาธิตเท่านั้น</div>
+  </div>
+</body>
+</html>

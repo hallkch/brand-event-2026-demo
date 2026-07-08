@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overview — Brand Event 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --red:#C41230; --red-dark:#9E0F26; --red-light:#FFF0F2;
+      --white:#FFFFFF; --gray-50:#F8F8F8; --gray-100:#F0F0F0;
+      --gray-200:#E2E2E2; --gray-300:#CACACA; --gray-400:#A8A8A8;
+      --gray-500:#888888; --gray-600:#606060; --gray-700:#404040; --gray-800:#242424;
+      --month-a-bg:#FFFFFF; --month-b-bg:#FDF5F6;
+      --past-bg:#F4F4F4; --current-bg:#FFF0F2;
+      --col-width:200px; --navbar-h:52px; --top-h:44vh;
+    }
+    html,body{height:100%;overflow:hidden;font-family:'Sarabun',system-ui,sans-serif;color:var(--gray-800);background:var(--gray-50);-webkit-font-smoothing:antialiased;margin:0;padding:0}
+    *{box-sizing:border-box}
+
+    /* NAVBAR */
+    .navbar{height:var(--navbar-h);padding:0 20px;background:var(--red);display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.22);flex-shrink:0;z-index:200}
+    .navbar-icon{color:rgba(255,255,255,.85);font-size:20px}
+    .navbar-title{color:#fff;font-size:14px;font-weight:700;flex:1}
+    .navbar-date{color:rgba(255,255,255,.75);font-size:11px;background:rgba(255,255,255,.14);padding:3px 10px;border-radius:20px}
+    .btn-today{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
+    .btn-today:hover{background:rgba(255,255,255,.3)}
+
+    /* MAIN */
+    .main{display:flex;flex-direction:column;height:calc(100vh - var(--navbar-h));overflow:hidden}
+
+    /* TOP PANE */
+    .top-pane{flex:0 0 auto;height:var(--top-h);min-height:160px;display:flex;flex-direction:column;overflow:hidden;padding:8px 16px 0}
+
+    /* CONTROLS ROW */
+    .top-controls{flex:0 0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+
+    /* Member Picker */
+    .member-picker{display:flex;align-items:center;gap:4px;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:3px 6px}
+    .member-picker-label{font-size:10px;font-weight:700;color:var(--gray-400);letter-spacing:.5px;padding-right:4px}
+    .mpill{font-size:13px;cursor:pointer;padding:2px 3px;border-radius:5px;transition:background .12s;line-height:1;border:2px solid transparent}
+    .mpill.active{border-color:var(--gray-400);background:var(--gray-100)}
+    .mpill:hover:not(.active){background:var(--gray-100)}
+
+    /* View toggle My Job / Team */
+    .view-toggle{display:flex;gap:2px;background:var(--gray-100);border-radius:7px;padding:2px}
+    .vtab{padding:4px 12px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--gray-500);font-family:inherit;transition:all .15s;white-space:nowrap}
+    .vtab.active{background:var(--white);color:var(--gray-800);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+    /* Team Legend */
+    .team-legend{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;flex-wrap:wrap}
+    .team-legend span{cursor:default}
+
+    /* Summary bar */
+    .summary-bar{flex:0 0 auto;display:flex;gap:6px;margin-bottom:6px;overflow-x:auto}
+    .sum-card{flex:0 0 auto;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:2px;min-width:140px}
+    .sum-card-name{font-size:11px;font-weight:700;color:var(--gray-600);display:flex;align-items:center;gap:4px}
+    .sum-card-row{display:flex;align-items:baseline;gap:4px}
+    .sum-card-num{font-size:20px;font-weight:800;color:var(--gray-800);line-height:1}
+    .sum-card-sub{font-size:10px;color:var(--gray-400)}
+    .sum-card-chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}
+    .sum-chip-sm{font-size:10px;padding:1px 7px;border-radius:20px;font-weight:700;white-space:nowrap}
+    .sc-done{background:#DCFCE7;color:#15803D}
+    .sc-po{background:#DBEAFE;color:#1D4ED8}
+    .sc-pend{background:#FEF9C3;color:#854D0E}
+
+    /* Timeline wrap */
+    .timeline-wrap{flex:1;overflow-x:auto;overflow-y:auto;border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);background:var(--white);-webkit-overflow-scrolling:touch}
+
+    /* RESIZER */
+    .resizer{flex:0 0 10px;background:var(--gray-100);border-top:1px solid var(--gray-200);border-bottom:1px solid var(--gray-200);cursor:row-resize;display:flex;align-items:center;justify-content:center;user-select:none;z-index:10;transition:background .15s}
+    .resizer:hover{background:var(--red-light)}
+    .resizer-bar{width:48px;height:3px;border-radius:3px;background:var(--gray-300);transition:background .15s}
+    .resizer:hover .resizer-bar{background:var(--red)}
+
+    /* BOTTOM PANE */
+    .bottom-pane{flex:1;overflow-y:auto;padding:10px 16px 20px;background:var(--gray-50)}
+    .detail-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+    .detail-title{font-size:14px;font-weight:700;flex:1;color:var(--gray-800)}
+    .detail-count{font-size:12px;color:var(--gray-500)}
+    .search-wrap{position:relative}
+    .search-wrap i{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--gray-400);pointer-events:none}
+    .search-box{border:1px solid var(--gray-200);border-radius:7px;padding:5px 10px 5px 30px;font-size:12px;font-family:inherit;outline:none;width:200px;background:var(--white);transition:border-color .15s}
+    .search-box:focus{border-color:var(--red)}
+
+    /* Detail table */
+    .detail-wrap{border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+    .detail-table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--white)}
+    .detail-table thead th{background:var(--gray-50);color:var(--gray-500);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;text-align:left;border-bottom:2px solid var(--gray-200);white-space:nowrap;position:sticky;top:0}
+    .detail-table tbody tr{border-bottom:1px solid var(--gray-100);transition:background .1s;cursor:pointer}
+    .detail-table tbody tr:last-child{border-bottom:none}
+    .detail-table tbody tr:hover td{background:#FFF8F8}
+    .detail-table td{padding:7px 10px;vertical-align:middle}
+    .td-num{font-weight:700;color:var(--gray-400);font-size:11px;width:36px;text-align:center}
+    .td-date{white-space:nowrap;font-weight:600;font-size:11.5px}
+    .td-job{font-weight:600;max-width:220px}
+    .td-job-venue{font-size:11px;color:var(--gray-400);font-weight:400;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+    .td-bu{white-space:nowrap;font-size:11.5px}
+    .td-type{white-space:nowrap;font-size:11.5px;color:var(--gray-600)}
+
+    /* Status badges */
+    .sbadge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+    .sbadge-planned{background:#DBEAFE;color:#1D4ED8}
+    .sbadge-inprogress{background:#FEF9C3;color:#854D0E}
+    .sbadge-completed{background:#DCFCE7;color:#15803D}
+    .sbadge-postponed{background:#FFE4E6;color:#9F1239}
+    .sbadge-other{background:var(--gray-100);color:var(--gray-600)}
+
+    /* Finance badges */
+    .fbadge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+    .fbadge-po{background:#DBEAFE;color:#1D4ED8}
+    .fbadge-contract{background:#F0FDF4;color:#15803D}
+    .fbadge-wait{background:#FEF9C3;color:#854D0E}
+    .fbadge-draft{background:var(--gray-100);color:var(--gray-500)}
+
+    /* Owner emoji in table */
+    .td-owner{font-size:16px;text-align:center;width:36px}
+
+    /* Edit button */
+    .btn-edit-sm{background:transparent;border:1px solid var(--gray-200);border-radius:6px;padding:3px 8px;cursor:pointer;font-size:12px;color:var(--gray-500);transition:all .15s;white-space:nowrap}
+    .btn-edit-sm:hover{border-color:var(--red);color:var(--red)}
+
+    /* Past row */
+    .row-past td{color:var(--gray-500)!important}
+    .row-past .sbadge,.row-past .fbadge{opacity:.6}
+    .row-past .td-num{color:var(--gray-300)!important}
+
+    /* Row flash */
+    @keyframes rowFlash{0%{background-color:#FFCDD2}40%{background-color:#FFEBEE}100%{background-color:#FFF0F2}}
+    .row-highlight td{animation:rowFlash 2s ease-out forwards}
+    .row-selected td{background-color:#FFF0F2}
+
+    .detail-empty{text-align:center;padding:30px;color:var(--gray-400);font-size:13px}
+    .loading{text-align:center;padding:40px;color:var(--gray-400);font-size:13px}
+    .loading i{font-size:32px;display:block;margin-bottom:8px;color:var(--gray-300)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .spin{display:inline-block;animation:spin 1s linear infinite}
+
+    /* TIMELINE */
+    .tl-table{border-collapse:collapse;min-width:max-content;table-layout:fixed}
+    .tl-month{font-size:12px;font-weight:700;padding:8px 12px;border-bottom:1px solid var(--gray-200);white-space:nowrap;text-align:left}
+    .tl-month:not(:last-child){border-right:2px solid var(--gray-200)}
+    .month-a{background:var(--month-a-bg);color:var(--red)}
+    .month-b{background:var(--month-b-bg);color:var(--red-dark)}
+    .tl-week{min-width:var(--col-width);width:var(--col-width);padding:7px 10px 6px;vertical-align:top;text-align:left;border-bottom:2px solid var(--gray-200)}
+    .tl-week:not(:last-child){border-right:1px solid var(--gray-200)}
+    .wk-label{font-size:13px;font-weight:700}
+    .wk-range{font-size:10px;color:var(--gray-400);margin-top:2px}
+    .wk-now-badge{display:inline-block;background:var(--white);color:var(--red);font-size:9px;font-weight:700;padding:1px 7px;border-radius:20px;margin-top:3px}
+    .wk-newmonth-badge{display:inline-flex;align-items:center;gap:2px;background:rgba(0,0,0,.06);color:var(--gray-600);font-size:9px;font-weight:600;padding:1px 6px;border-radius:20px;margin-top:3px}
+    th.tl-week.col-past{background:var(--past-bg)}
+    td.tl-cell.col-past{background:var(--past-bg)}
+    .col-past .wk-label{color:var(--gray-400)}
+    .col-past .wk-range{color:var(--gray-300)}
+    th.tl-week.col-current{background:var(--red);border-left:2.5px solid var(--red-dark)!important;border-right:2.5px solid var(--red-dark)!important;border-top:2.5px solid var(--red-dark)}
+    th.tl-week.col-current .wk-label{color:#fff;font-size:15px}
+    th.tl-week.col-current .wk-range{color:rgba(255,255,255,.7)}
+    td.tl-cell.col-current{background:var(--current-bg);border-left:2.5px solid var(--red-dark)!important;border-right:2.5px solid var(--red-dark)!important;border-bottom:2.5px solid var(--red-dark)}
+    th.tl-week.col-future{background:var(--white)}
+    td.tl-cell.col-future{background:var(--white)}
+    th.tl-week.col-future.month-b{background:var(--month-b-bg)}
+    td.tl-cell.col-future.month-b{background:var(--month-b-bg)}
+    .col-future .wk-label{color:var(--gray-700)}
+    .tl-cell{min-width:var(--col-width);width:var(--col-width);padding:7px;vertical-align:top}
+    .tl-cell:not(:last-child){border-right:1px solid var(--gray-200)}
+    .ev-card{border-radius:7px;padding:6px 8px 5px;margin-bottom:5px;border-left:3px solid transparent;cursor:pointer;transition:transform .12s,box-shadow .12s}
+    .ev-card:last-child{margin-bottom:0}
+    .ev-card:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.12)}
+    .ev-card.selected{outline:2px solid var(--red);outline-offset:1px}
+    .ev-date{font-size:11px;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ev-name{font-size:12.5px;font-weight:500;line-height:1.4;margin-top:1px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .ev-past{background:#EAEAEA!important;border-left-color:#B0B0B0!important}
+    .ev-past .ev-date{color:#444!important}
+    .ev-past .ev-name{color:#555!important}
+    .month-spacer{height:12px;margin:2px -7px 2px;border-top:1.5px dashed var(--gray-300)}
+
+    /* ── EVENT CARD OVERLAY ── */
+    #ecard-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);align-items:center;justify-content:center;padding:20px}
+    #ecard-overlay.open{display:flex}
+    .ecard-panel{background:#fff;border-radius:14px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,.22);position:relative}
+    .ecard-header{padding:18px 20px 12px;border-bottom:1px solid var(--gray-200)}
+    .ecard-ref{font-size:10px;font-weight:700;color:var(--gray-400);letter-spacing:.8px;margin-bottom:6px}
+    .ecard-title{font-size:17px;font-weight:800;color:var(--gray-800);line-height:1.3;margin-bottom:4px;padding-right:32px}
+    .ecard-venue{font-size:12px;color:var(--gray-400);margin-bottom:10px}
+    .ecard-badges{display:flex;gap:6px;flex-wrap:wrap}
+    .ecard-close{position:absolute;top:14px;right:16px;background:var(--gray-100);border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--gray-600);transition:background .15s}
+    .ecard-close:hover{background:var(--gray-200)}
+    .ecard-body{padding:16px 20px}
+    .ecard-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-bottom:14px}
+    .ecard-field{display:flex;flex-direction:column;gap:2px}
+    .ecard-field-label{font-size:10px;font-weight:700;color:var(--gray-400);letter-spacing:.4px;text-transform:uppercase}
+    .ecard-field-val{font-size:13px;font-weight:600;color:var(--gray-800)}
+    .ecard-field-val.muted{color:var(--gray-500);font-weight:400}
+    .ecard-memo{background:var(--gray-50);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--gray-600);line-height:1.6;margin-bottom:14px}
+    .ecard-footer{padding:12px 20px 16px;border-top:1px solid var(--gray-100);display:flex;justify-content:flex-end}
+    .btn-ecard-edit{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--gray-300);border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer;font-family:inherit;transition:all .15s}
+    .btn-ecard-edit:hover{border-color:var(--red);color:var(--red)}
+
+    /* SPLASH */
+    #splash-screen{position:fixed;inset:0;z-index:9999;background:#C41230;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:transform .75s cubic-bezier(.77,0,.18,1)}
+    #splash-screen.slide-away{transform:translateY(-100%)}
+    .splash-grid{position:absolute;inset:0;pointer-events:none;opacity:.06;background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.6) 39px,rgba(255,255,255,.6) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.6) 39px,rgba(255,255,255,.6) 40px)}
+    .splash-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.2) 100%)}
+    .splash-content{text-align:center;position:relative;z-index:1;will-change:transform;transition:transform .09s linear}
+    .splash-el{opacity:0;transform:translateY(20px)}
+    .splash-el.s-in{animation:splashFadeUp .8s cubic-bezier(.22,.61,.36,1) forwards}
+    @keyframes splashFadeUp{to{opacity:1;transform:translateY(0)}}
+    .splash-greeting{font-family:'Sarabun',sans-serif;font-size:19px;font-weight:300;color:rgba(255,255,255,.68);letter-spacing:2.5px;font-style:italic;margin-bottom:16px}
+    .splash-sublabel{display:flex;align-items:center;justify-content:center;margin-bottom:28px}
+    .splash-brand{font-family:'Sarabun',sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:.3px}
+    .splash-meet{font-family:'Sarabun',sans-serif;font-size:22px;font-weight:300;color:rgba(255,255,255,.75)}
+    .splash-divider{width:1px;height:20px;background:rgba(255,255,255,.28);margin:0 16px}
+    .splash-tagline{font-family:'Playfair Display',serif;font-size:80px;font-weight:700;color:#fff;line-height:1;letter-spacing:1px;margin-bottom:22px}
+    .splash-dot{display:inline-block;animation:splashDotBounce 1.5s ease-in-out infinite}
+    .splash-dot:nth-child(1){animation-delay:0s}
+    .splash-dot:nth-child(2){animation-delay:.22s}
+    @keyframes splashDotBounce{0%,60%,100%{transform:translateY(0);opacity:1}30%{transform:translateY(-11px);opacity:.5}}
+    .splash-dateline{font-family:'Sarabun',sans-serif;font-size:16px;font-weight:300;color:rgba(255,255,255,.6);letter-spacing:.8px;margin-bottom:42px}
+    .splash-btn{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.7);font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;padding:12px 40px;border-radius:40px;cursor:pointer;position:relative;overflow:hidden;letter-spacing:.5px;outline:none;transition:background .2s,color .2s,border-color .2s,transform .15s,box-shadow .15s}
+    .splash-btn:hover{background:#fff;color:#C41230;border-color:#fff;transform:scale(1.05);box-shadow:0 10px 28px rgba(0,0,0,.2)}
+    .splash-btn:active{transform:scale(.97)}
+    .splash-ripple{position:absolute;border-radius:50%;width:10px;height:10px;margin:-5px 0 0 -5px;background:rgba(255,255,255,.25);transform:scale(0);animation:splashRipple .6s linear forwards;pointer-events:none}
+    @keyframes splashRipple{to{transform:scale(18);opacity:0}}
+    .splash-footer{position:absolute;bottom:18px;left:0;right:0;display:flex;justify-content:space-between;padding:0 24px;font-family:'Sarabun',sans-serif;font-size:10px;color:rgba(255,255,255,.22);letter-spacing:.9px;text-transform:uppercase}
+  </style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash-screen">
+  <div class="splash-grid"></div>
+  <div class="splash-vignette"></div>
+  <div class="splash-content" id="splash-content">
+    <div class="splash-el splash-greeting" id="sp-g">Good to see you,</div>
+    <div class="splash-el splash-sublabel" id="sp-sl">
+      <span class="splash-brand">Brand Event</span>
+      <div class="splash-divider"></div>
+      <span class="splash-meet">Overview</span>
+    </div>
+    <div class="splash-el splash-tagline" id="sp-tl">
+      What's Going On<span class="splash-dot">.</span><span class="splash-dot">.</span>?
+    </div>
+    <div class="splash-el splash-dateline" id="sp-dl"></div>
+    <div class="splash-el" id="sp-btn">
+      <button class="splash-btn" id="splash-btn-enter">Let's go</button>
+    </div>
+  </div>
+  <div class="splash-footer"><span>v2.0</span><span>CPF Brand Event Team</span></div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <i class="ti ti-layout-dashboard navbar-icon"></i>
+  <div class="navbar-title">Overview — Brand Event 2026</div>
+  <button class="btn-today" onclick="scrollToToday()">
+    <i class="ti ti-crosshair" style="font-size:12px"></i>สัปดาห์นี้
+  </button>
+  <div class="navbar-date" id="nav-date">—</div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP PANE -->
+  <div class="top-pane" id="top-pane">
+
+    <!-- Controls row -->
+    <div class="top-controls" id="top-controls">
+      <!-- Member picker (ฉันคือใคร) -->
+      <div class="member-picker" id="member-picker">
+        <span class="member-picker-label">ฉันคือ</span>
+        <!-- populated by JS -->
+      </div>
+      <!-- View toggle -->
+      <div class="view-toggle">
+        <button class="vtab active" id="vtab-myjob" onclick="setView('myjob')">My Job</button>
+        <button class="vtab" id="vtab-team" onclick="setView('team')">Team</button>
+      </div>
+      <!-- Team legend (shown only in team view) -->
+      <div class="team-legend" id="team-legend" style="display:none"></div>
+    </div>
+
+    <!-- Summary bar -->
+    <div class="summary-bar" id="summary-bar"></div>
+
+    <!-- Timeline -->
+    <div class="timeline-wrap" id="timeline-wrap">
+      <div class="loading"><i class="ti ti-loader spin"></i>กำลังโหลด...</div>
+    </div>
+  </div>
+
+  <!-- RESIZER -->
+  <div class="resizer" id="resizer" title="ลากเพื่อปรับขนาด">
+    <div class="resizer-bar"></div>
+  </div>
+
+  <!-- BOTTOM PANE -->
+  <div class="bottom-pane" id="bottom-pane">
+    <div id="detail-section">
+      <div class="detail-header">
+        <div class="detail-title">
+          <i class="ti ti-table" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:var(--red)"></i>
+          รายการงาน
+        </div>
+        <span class="detail-count" id="detail-count"></span>
+        <div style="flex:1"></div>
+        <div class="search-wrap">
+          <i class="ti ti-search"></i>
+          <input type="text" class="search-box" id="search-box"
+            placeholder="ค้นหาชื่องาน / Agency / BU…" oninput="filterDetail()">
+        </div>
+      </div>
+      <div class="detail-wrap">
+        <table class="detail-table" id="detail-table">
+          <thead>
+            <tr>
+              <th style="width:36px;text-align:center">#</th>
+              <th style="width:32px;text-align:center"></th>
+              <th>BU</th>
+              <th>ชื่องาน / สถานที่</th>
+              <th>วันที่</th>
+              <th>ประเภท</th>
+              <th>สถานะงาน</th>
+              <th>สถานะการเงิน</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="detail-tbody"></tbody>
+        </table>
+        <div class="detail-empty" id="detail-empty" style="display:none">ไม่พบข้อมูล</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- EVENT CARD OVERLAY -->
+<div id="ecard-overlay" onclick="overlayClickEcard(event)">
+  <div class="ecard-panel" id="ecard-panel">
+    <div class="ecard-header">
+      <div class="ecard-ref" id="ec-ref">EVT-000</div>
+      <div class="ecard-title" id="ec-title">—</div>
+      <div class="ecard-venue" id="ec-venue" style="display:none"></div>
+      <div class="ecard-badges" id="ec-badges"></div>
+      <button class="ecard-close" onclick="closeEventCard()" title="ปิด">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+    <div class="ecard-body">
+      <div class="ecard-grid" id="ec-grid"></div>
+      <div class="ecard-memo" id="ec-memo" style="display:none"></div>
+    </div>
+    <div class="ecard-footer">
+      <button class="btn-ecard-edit" onclick="editFromCard()">
+        <i class="ti ti-pencil" style="font-size:14px"></i> แก้ไข
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase JS client (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+/* ════════════════════════════════════════
+   MOCK MODE + DATA
+════════════════════════════════════════ */
+/* ⚠️ DEMO/Bootcamp: ใช้ Supabase project จำลอง — อย่าใส่ข้อมูลจริงของบริษัท */
+const SUPABASE_URL      = 'https://qkphksbjdrdwfueexsbm.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_j9UEtnttsLueJ3icFy2KvQ_RSkqdg0U';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const MOCK_MODE = false; /* false = ดึงข้อมูลสดจาก Supabase + subscribe realtime, true = ใช้ EXCEL_DATA ในไฟล์ล้วนๆ */
+
+/* ตัวแปรข้อมูลจริงที่หน้าจอใช้แสดงผล (เริ่มต้นเท่ากับ EXCEL_DATA แล้วค่อยถูกแทนที่ด้วยข้อมูลจาก Supabase) */
+let EVENTS_DATA = [];
+
+/* แปลงแถวจาก Supabase (snake_case) ให้เป็นรูปแบบเดียวกับ EXCEL_DATA ที่หน้านี้ใช้อยู่เดิม */
+function dbRowToLocal(d){
+  return {
+    owner: d.owner, bu: d.bu, dateType: d.date_type,
+    dateStart: d.date_start, dateEnd: d.date_end, dateRaw: d.date_raw,
+    days: d.days, status: d.status, projectOwner: d.project_owner,
+    brandOwner: d.brand_owner, format: d.format, complexity: d.complexity,
+    urgency: d.urgency, budget: d.budget, expense: d.expense, memo: d.memo,
+    serves: d.serves, area: d.area, note: d.note, event_code: d.event_code,
+    job_name: d.job_name, agency_name: d.agency_name,
+    reach_actual: d.reach_actual, engagement_actual: d.engagement_actual,
+    created_at: d.created_at, updated_at: d.updated_at,
+  };
+}
+
+/* โหลดข้อมูลจาก Supabase (หรือ fallback เป็น EXCEL_DATA ถ้าต่อ DB ไม่ได้) แล้ววาดหน้าจอใหม่ */
+function loadEventsAndRender(){
+  if(MOCK_MODE){
+    EVENTS_DATA = EXCEL_DATA;
+    renderAll();
+    return;
+  }
+  supabaseClient
+    .from('events')
+    .select('*')
+    .order('date_start', { ascending: true })
+    .then(({data, error})=>{
+      EVENTS_DATA = error ? EXCEL_DATA : (data||[]).map(dbRowToLocal);
+      if(error) console.error('Supabase load error, fallback to demo data:', error);
+      renderAll();
+    });
+}
+
+/* Realtime: อัปเดตหน้าจออัตโนมัติทันทีที่มีคนแก้ไขข้อมูลในตาราง events (เช่น จาก Member Workspace) */
+function subscribeRealtime(){
+  if(MOCK_MODE) return;
+  supabaseClient
+    .channel('events-timeline-sync')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, ()=>{
+      loadEventsAndRender();
+    })
+    .subscribe();
+}
+const EXCEL_DATA = [{"owner":"ploy","bu":"Campaign B","dateType":"single","dateStart":"2026-01-22","dateEnd":"2026-01-22","dateRaw":"22-Jan","days":1.0,"status":"Completed","projectOwner":"พลอย","brandOwner":"","format":"Event","complexity":"กลาง","urgency":"ด่วน","budget":600000.0,"expense":"MKT-GS","memo":"Family Fun Fair","serves":"1000","area":"3x3 m.","note":"","event_code":"CAM-009","job_name":"[Campaign B] Family Day Fair @Central Rama 9","agency_name":"","reach_actual":"8000","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"guy","bu":"Campaign C","dateType":"single","dateStart":"2026-01-24","dateEnd":"2026-01-24","dateRaw":"24-Jan","days":1.0,"status":"Completed","projectOwner":"กาย","brandOwner":"","format":"Other","complexity":"เล็ก","urgency":"ด่วน","budget":150000.0,"expense":"MKT-GS","memo":"Premium VIP Experience","serves":"500","area":"2x2 m.","note":"Tentative วันงาน","event_code":"CAM-016","job_name":"[Campaign C] VIP Gala Dinner @Athenee Hotel","agency_name":"Spark Studio","reach_actual":"5000","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"mint","bu":"Campaign C","dateType":"single","dateStart":"2026-02-03","dateEnd":"2026-02-03","dateRaw":"3-Feb","days":1.0,"status":"Completed","projectOwner":"มิ้นท์","brandOwner":"","format":"Event","complexity":"เล็ก","urgency":"","budget":600000.0,"expense":"MKT-GS","memo":"Premium VIP Experience","serves":"0","area":"3x3 m.","note":"Tentative วันงาน","event_code":"CAM-017","job_name":"[Campaign C] Media Tasting @Rooftop Bar Sathorn","agency_name":"PlayGround Co.","reach_actual":"1200","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"nat","bu":"Campaign A","dateType":"range","dateStart":"2026-03-02","dateEnd":"2026-03-05","dateRaw":"2 - 5 Mar","days":4.0,"status":"Completed","projectOwner":"แนท","brandOwner":"","format":"Shop decoration","complexity":"เล็ก","urgency":"ด่วน","budget":50000.0,"expense":"","memo":"Digital Sampling Roadshow","serves":"5000","area":"2x2 m.","note":"","event_code":"CAM-001","job_name":"[Campaign A] Kick-off Launch Event @Siam Paragon","agency_name":"Spark Studio","reach_actual":"5000","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"nat","bu":"Campaign C","dateType":"single","dateStart":"2026-03-07","dateEnd":"2026-03-07","dateRaw":"7-Mar","days":1.0,"status":"Postponed","projectOwner":"แนท","brandOwner":"","format":"Other","complexity":"กลาง","urgency":"ด่วน","budget":120000.0,"expense":"MKT-TH","memo":"Premium VIP Experience","serves":"0","area":"3x3 m.","note":"งานเลื่อน","event_code":"CAM-018","job_name":"[Campaign C] Partner Networking Night @W Bangkok","agency_name":"","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"ploy","bu":"Campaign A","dateType":"single","dateStart":"2026-04-23","dateEnd":"2026-04-23","dateRaw":"23-Apr","days":1.0,"status":"Completed","projectOwner":"พลอย","brandOwner":"","format":"Event","complexity":"กลาง","urgency":"","budget":150000.0,"expense":"MKT-TH","memo":"Digital Sampling Roadshow","serves":"0","area":"2x2 m.","note":"*ยังไม่ได้คิดราคา","event_code":"CAM-002","job_name":"[Campaign A] Sampling Roadshow @BTS Siam-Asok","agency_name":"BrightWorks","reach_actual":"15000","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"guy","bu":"Campaign B","dateType":"range","dateStart":"2026-04-24","dateEnd":"2026-04-27","dateRaw":"24 - 27 Apr","days":4.0,"status":"Completed","projectOwner":"กาย","brandOwner":"","format":"Roadshow","complexity":"เล็ก","urgency":"","budget":80000.0,"expense":"MKT-GS","memo":"Family Fun Fair","serves":"5000","area":"6x3 m.","note":"*ยังไม่ได้คิดราคา","event_code":"CAM-010","job_name":"[Campaign B] Kids Zone Activity @Terminal 21","agency_name":"Idea Craft","reach_actual":"8000","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"mint","bu":"Campaign B","dateType":"single","dateStart":"2026-05-20","dateEnd":"2026-05-20","dateRaw":"20-May","days":1.0,"status":"Completed","projectOwner":"มิ้นท์","brandOwner":"","format":"Event","complexity":"เล็ก","urgency":"","budget":250000.0,"expense":"Brand","memo":"Family Fun Fair","serves":"500","area":"3x3 m.","note":"","event_code":"CAM-011","job_name":"[Campaign B] Mascot Meet & Greet @Mega Bangna","agency_name":"Momentum Agency","reach_actual":"8000","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"ploy","bu":"Campaign C","dateType":"single","dateStart":"2026-05-26","dateEnd":"2026-05-26","dateRaw":"26-May","days":1.0,"status":"Completed","projectOwner":"พลอย","brandOwner":"","format":"Event","complexity":"เล็ก","urgency":"","budget":120000.0,"expense":"MKT-TH","memo":"Premium VIP Experience","serves":"1000","area":"","note":"","event_code":"CAM-019","job_name":"[Campaign C] Exclusive Preview Event @Sindhorn Kempinski","agency_name":"Momentum Agency","reach_actual":"5000","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"nat","bu":"Campaign B","dateType":"range","dateStart":"2026-06-25","dateEnd":"2026-06-30","dateRaw":"25 - 30 Jun","days":6.0,"status":"Postponed","projectOwner":"แนท","brandOwner":"","format":"Other","complexity":"เล็ก","urgency":"","budget":120000.0,"expense":"MKT-TH","memo":"Family Fun Fair","serves":"5000","area":"3x3 m.","note":"งานเลื่อน","event_code":"CAM-012","job_name":"[Campaign B] Weekend Roadshow @Fashion Island","agency_name":"","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"guy","bu":"Campaign A","dateType":"range","dateStart":"2026-06-26","dateEnd":"2026-06-30","dateRaw":"26 - 30 Jun","days":5.0,"status":"Completed","projectOwner":"กาย","brandOwner":"","format":"Sampling","complexity":"ใหญ่","urgency":"","budget":300000.0,"expense":"","memo":"Digital Sampling Roadshow","serves":"5000","area":"","note":"งานเลื่อน","event_code":"CAM-003","job_name":"[Campaign A] Influencer Tasting Session @Studio Central","agency_name":"Idea Craft","reach_actual":"1200","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"mint","bu":"Campaign A","dateType":"single","dateStart":"2026-07-02","dateEnd":"2026-07-02","dateRaw":"2-Jul","days":1.0,"status":"Completed","projectOwner":"มิ้นท์","brandOwner":"","format":"Shop decoration","complexity":"กลาง","urgency":"ด่วน","budget":80000.0,"expense":"MKT-TH","memo":"Digital Sampling Roadshow","serves":"0","area":"","note":"","event_code":"CAM-004","job_name":"[Campaign A] Pop-up Booth @CentralWorld Atrium","agency_name":"BrightWorks","reach_actual":"5000","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"nat","bu":"Campaign A","dateType":"single","dateStart":"2026-08-07","dateEnd":"2026-08-07","dateRaw":"7-Aug","days":1.0,"status":"Planned","projectOwner":"แนท","brandOwner":"","format":"Roadshow","complexity":"เล็ก","urgency":"ด่วน","budget":80000.0,"expense":"VIP-GS","memo":"Digital Sampling Roadshow","serves":"5000","area":"2x2 m.","note":"งานเลื่อน","event_code":"CAM-005","job_name":"[Campaign A] University Roadshow @Chulalongkorn","agency_name":"","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"ploy","bu":"Campaign B","dateType":"single","dateStart":"2026-08-12","dateEnd":"2026-08-12","dateRaw":"12-Aug","days":1.0,"status":"Planned","projectOwner":"พลอย","brandOwner":"","format":"Roadshow","complexity":"เล็ก","urgency":"","budget":600000.0,"expense":"MKT-TH","memo":"Family Fun Fair","serves":"0","area":"","note":"*ยังไม่ได้คิดราคา","event_code":"CAM-013","job_name":"[Campaign B] School Sampling Tour @Bangkok Prep","agency_name":"Momentum Agency","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"guy","bu":"Campaign C","dateType":"single","dateStart":"2026-08-16","dateEnd":"2026-08-16","dateRaw":"16-Aug","days":1.0,"status":"Planned","projectOwner":"กาย","brandOwner":"","format":"Event","complexity":"เล็ก","urgency":"","budget":600000.0,"expense":"","memo":"Premium VIP Experience","serves":"0","area":"","note":"งานเลื่อน","event_code":"CAM-020","job_name":"[Campaign C] Trade Partner Roadshow @Impact Muang Thong","agency_name":"Spark Studio","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"guy","bu":"Campaign B","dateType":"single","dateStart":"2026-09-08","dateEnd":"2026-09-08","dateRaw":"8-Sep","days":1.0,"status":"Planned","projectOwner":"กาย","brandOwner":"","format":"Roadshow","complexity":"เล็ก","urgency":"","budget":50000.0,"expense":"MKT-TH","memo":"Family Fun Fair","serves":"0","area":"","note":"*ยังไม่ได้คิดราคา","event_code":"CAM-014","job_name":"[Campaign B] Photo Booth Campaign @Icon Siam","agency_name":"Spark Studio","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"ploy","bu":"Campaign A","dateType":"range","dateStart":"2026-09-18","dateEnd":"2026-09-22","dateRaw":"18 - 22 Sep","days":5.0,"status":"Planned","projectOwner":"พลอย","brandOwner":"","format":"Sampling","complexity":"กลาง","urgency":"","budget":50000.0,"expense":"Brand","memo":"Digital Sampling Roadshow","serves":"0","area":"","note":"*ยังไม่ได้คิดราคา","event_code":"CAM-006","job_name":"[Campaign A] Flagship Store Decoration @EmQuartier","agency_name":"","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"guy","bu":"Campaign A","dateType":"range","dateStart":"2026-10-11","dateEnd":"2026-10-18","dateRaw":"11 - 18 Oct","days":8.0,"status":"Planned","projectOwner":"กาย","brandOwner":"","format":"Sampling","complexity":"เล็ก","urgency":"","budget":300000.0,"expense":"","memo":"Digital Sampling Roadshow","serves":"500","area":"6x3 m.","note":"","event_code":"CAM-007","job_name":"[Campaign A] Media Day Press Conference @Hotel Ballroom","agency_name":"","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"mint","bu":"Campaign C","dateType":"range","dateStart":"2026-10-13","dateEnd":"2026-10-16","dateRaw":"13 - 16 Oct","days":4.0,"status":"Planned","projectOwner":"มิ้นท์","brandOwner":"","format":"Other","complexity":"กลาง","urgency":"","budget":50000.0,"expense":"MKT-TH","memo":"Premium VIP Experience","serves":"2000","area":"","note":"","event_code":"CAM-021","job_name":"[Campaign C] Year-end Thank You Party @Marriott Marquis","agency_name":"PlayGround Co.","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"mint","bu":"Campaign B","dateType":"single","dateStart":"2026-12-09","dateEnd":"2026-12-09","dateRaw":"9-Dec","days":1.0,"status":"Planned","projectOwner":"มิ้นท์","brandOwner":"","format":"Other","complexity":"เล็ก","urgency":"ด่วน","budget":150000.0,"expense":"VIP-GS","memo":"Family Fun Fair","serves":"5000","area":"","note":"","event_code":"CAM-015","job_name":"[Campaign B] Community Fair @Suan Luang Market","agency_name":"Idea Craft","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"},{"owner":"mint","bu":"Campaign A","dateType":"single","dateStart":"2026-12-19","dateEnd":"2026-12-19","dateRaw":"19-Dec","days":1.0,"status":"Planned","projectOwner":"มิ้นท์","brandOwner":"","format":"Roadshow","complexity":"ใหญ่","urgency":"ด่วน","budget":300000.0,"expense":"Brand","memo":"Digital Sampling Roadshow","serves":"500","area":"","note":"","event_code":"CAM-008","job_name":"[Campaign A] Wrap-up Party & Recap Event @Riverside Hall","agency_name":"Spark Studio","reach_actual":"0","created_at":"2026-01-01T00:00:00.000Z","updated_at":"2026-01-01T00:00:00.000Z"}];
+
+/* ════════════════════════════════════════
+   MEMBERS CONFIG
+════════════════════════════════════════ */
+const MEMBERS_CFG = [
+  { key:'nat',   emoji:'🟡', name:'Nat',   bg:'#FEFCE8', fg:'#92400E', border:'#D97706' },
+  { key:'ploy',  emoji:'🔵', name:'Ploy',  bg:'#EFF6FF', fg:'#1D4ED8', border:'#2563EB' },
+  { key:'guy',   emoji:'🟢', name:'Guy',   bg:'#F0FDF4', fg:'#15803D', border:'#16A34A' },
+  { key:'mint',  emoji:'🟣', name:'Mint',  bg:'#FAF5FF', fg:'#7E22CE', border:'#9333EA' },
+];
+function getMCfg(ownerKey) {
+  return MEMBERS_CFG.find(m => m.key === ownerKey) || { emoji:'⬛', name: ownerKey, bg:'#EAEAEA', fg:'#444', border:'#999' };
+}
+
+const MONTHS_TH   = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const MONTHS_FULL = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+/* ── STATE ── */
+let currentMemberId = localStorage.getItem('ov_member') || 'nat';
+let viewMode        = 'myjob'; // 'myjob' | 'team'
+let allDetailRows   = [];
+let selectedCard    = null;
+let openCardCode    = null;
+
+/* ════════════════════════════════════════
+   DATE UTILITIES
+════════════════════════════════════════ */
+function getMondayOf(d){const dt=new Date(d),dow=dt.getDay();dt.setDate(dt.getDate()+(dow===0?-6:1-dow));dt.setHours(0,0,0,0);return dt}
+function weekKey(m){return[m.getFullYear(),String(m.getMonth()+1).padStart(2,'0'),String(m.getDate()).padStart(2,'0')].join('-')}
+function getWeekNumInMonth(wStart,month,year){const ref=getMondayOf(new Date(year,month,1));return Math.round((wStart-ref)/(7*86400000))+1}
+function weekRangeLabel(s,e){return s.getMonth()===e.getMonth()?`${s.getDate()}–${e.getDate()} ${MONTHS_TH[s.getMonth()]}`:
+  `${s.getDate()} ${MONTHS_TH[s.getMonth()]} – ${e.getDate()} ${MONTHS_TH[e.getMonth()]}`}
+function shortDate(d){return`${d.getDate()} ${MONTHS_TH[d.getMonth()]}`}
+function longDate(d){return`${d.getDate()} ${MONTHS_TH[d.getMonth()]} ${d.getFullYear()}`}
+function fmtMoney(n){const v=parseFloat(String(n).replace(/,/g,''));return isNaN(v)||v===0?'–':v.toLocaleString('th-TH')+' ฿'}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function getEventDate(r){
+  if(r.dateStart) return new Date(r.dateStart);
+  return null;
+}
+function formatEventDate(r){
+  if(!r.dateStart && !r.dateEnd && !r.dates) return '—';
+  if(r.dateType==='single'||!r.dateType){
+    const d=new Date(r.dateStart);return isNaN(d)?'—':shortDate(d);
+  }
+  if(r.dateType==='range'){
+    const s=new Date(r.dateStart),e=new Date(r.dateEnd);
+    return isNaN(s)||isNaN(e)?'—':shortDate(s)+(s.getTime()!==e.getTime()?` – ${shortDate(e)}`:'');
+  }
+  if(r.dateType==='scattered'&&r.dates){
+    const arr=(typeof r.dates==='string'?JSON.parse(r.dates):r.dates)||[];
+    if(arr.length===0) return '—';
+    const first=new Date(arr[0]),last=new Date(arr[arr.length-1]);
+    return arr.length===1?shortDate(first):`${shortDate(first)} (+${arr.length-1})`;
+  }
+  return r.dateRaw||'—';
+}
+
+/* ════════════════════════════════════════
+   FINANCE STATUS PARSER
+════════════════════════════════════════ */
+function parseFinance(r){
+  const memo=(r.memo||r.note||'').toLowerCase();
+  if(memo.includes('po ออกแล้ว')||memo.includes('po出')||memo.includes('✅')) return 'cleared';
+  if(memo.includes('ทำสัญญา')||memo.includes('🖋')) return 'contract';
+  if(memo.includes('รอ po')||memo.includes('รออนุมัติ')||memo.includes('🟡')||memo.includes('🔵')) return 'wait';
+  if(memo.includes('ร่าง')) return 'draft';
+  return '';
+}
+function financeBadge(r){
+  const f=parseFinance(r);
+  if(f==='cleared') return`<span class="fbadge fbadge-po">✅ PO ออกแล้ว</span>`;
+  if(f==='contract') return`<span class="fbadge fbadge-contract">🖋 ทำสัญญา</span>`;
+  if(f==='wait')     return`<span class="fbadge fbadge-wait">🟡 รอดำเนินการ</span>`;
+  if(f==='draft')    return`<span class="fbadge fbadge-draft">ร่าง</span>`;
+  return'<span style="color:var(--gray-300)">—</span>';
+}
+
+/* ════════════════════════════════════════
+   STATUS BADGE
+════════════════════════════════════════ */
+function statusBadge(s){
+  const sl=(s||'').toLowerCase().replace(/\s/g,'');
+  if(!sl||sl==='planned'||sl.includes('notstart')) return`<span class="sbadge sbadge-planned">Planned</span>`;
+  if(sl.includes('progress')) return`<span class="sbadge sbadge-inprogress">In Progress</span>`;
+  if(sl.includes('complet')||sl==='done') return`<span class="sbadge sbadge-completed">Completed</span>`;
+  if(sl.includes('post')) return`<span class="sbadge sbadge-postponed">Postponed</span>`;
+  return s?`<span class="sbadge sbadge-other">${esc(s)}</span>`:'—';
+}
+
+/* ════════════════════════════════════════
+   MEMBER PICKER
+════════════════════════════════════════ */
+function initMemberPicker(){
+  const el=document.getElementById('member-picker');
+  let html='<span class="member-picker-label">ฉันคือ</span>';
+  MEMBERS_CFG.forEach(m=>{
+    html+=`<span class="mpill${m.key===currentMemberId?' active':''}" title="${m.name}"
+      onclick="selectMember('${m.key}')">${m.emoji}</span>`;
+  });
+  el.innerHTML=html;
+}
+function selectMember(key){
+  currentMemberId=key;
+  localStorage.setItem('ov_member',key);
+  document.querySelectorAll('.mpill').forEach(p=>p.classList.toggle('active',p.title===getMCfg(key).name));
+  renderAll();
+}
+
+/* ════════════════════════════════════════
+   VIEW TOGGLE
+════════════════════════════════════════ */
+function setView(mode){
+  viewMode=mode;
+  document.getElementById('vtab-myjob').classList.toggle('active',mode==='myjob');
+  document.getElementById('vtab-team').classList.toggle('active',mode==='team');
+  document.getElementById('team-legend').style.display=mode==='team'?'flex':'none';
+  renderAll();
+}
+
+/* ════════════════════════════════════════
+   TEAM LEGEND (shown in team mode)
+════════════════════════════════════════ */
+function renderTeamLegend(){
+  // put current member first
+  const ordered=[...MEMBERS_CFG];
+  const myIdx=ordered.findIndex(m=>m.key===currentMemberId);
+  if(myIdx>0){ const [me]=ordered.splice(myIdx,1); ordered.unshift(me); }
+  document.getElementById('team-legend').innerHTML=
+    ordered.map(m=>`<span style="color:${m.fg};font-weight:700">${m.emoji} ${m.name}</span>`).join(
+      '<span style="color:var(--gray-300);padding:0 2px">·</span>');
+}
+
+/* ════════════════════════════════════════
+   SUMMARY BAR
+════════════════════════════════════════ */
+function getMemberStats(key,data){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const mine=data.filter(r=>r.owner===key);
+  const total=mine.length;
+  const past=mine.filter(r=>{const d=getEventDate(r);return d&&d<today}).length;
+  const done=mine.filter(r=>(r.status||'').toLowerCase().includes('complet')||(r.status||'').toLowerCase()==='done').length;
+  const po=mine.filter(r=>parseFinance(r)==='cleared'||parseFinance(r)==='contract').length;
+  const pend=mine.filter(r=>{const f=parseFinance(r);return f==='wait'||f==='draft'}).length;
+  return{total,past,done,po,pend};
+}
+function renderSummaryBar(data){
+  const bar=document.getElementById('summary-bar');
+  const members=viewMode==='team'?MEMBERS_CFG:[getMCfg(currentMemberId)];
+  // order: current member first in team mode
+  let ordered=viewMode==='team'?[...MEMBERS_CFG]:members;
+  if(viewMode==='team'){
+    const myIdx=ordered.findIndex(m=>m.key===currentMemberId);
+    if(myIdx>0){const[me]=ordered.splice(myIdx,1);ordered.unshift(me);}
+  }
+  bar.innerHTML=ordered.map(m=>{
+    const s=getMemberStats(m.key,data);
+    return`<div class="sum-card">
+      <div class="sum-card-name">${m.emoji} ${m.name}</div>
+      <div class="sum-card-row">
+        <span class="sum-card-num">${s.total}</span>
+        <span class="sum-card-sub">งานทั้งหมด</span>
+      </div>
+      <div style="font-size:10px;color:var(--gray-400);margin-top:1px">ผ่านไปแล้ว ${s.past} งาน</div>
+      <div class="sum-card-chips">
+        <span class="sum-chip-sm sc-done">✅ Done ${s.done}</span>
+        <span class="sum-chip-sm sc-po">💳 PO ${s.po}</span>
+        ${s.pend>0?`<span class="sum-chip-sm sc-pend">⏳ รอ ${s.pend}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════
+   GET DISPLAY DATA
+════════════════════════════════════════ */
+function getDisplayData(){
+  if(viewMode==='myjob') return EVENTS_DATA.filter(r=>r.owner===currentMemberId);
+  return EVENTS_DATA;
+}
+
+/* ════════════════════════════════════════
+   GENERATE WEEKS
+════════════════════════════════════════ */
+function generateDisplayWeeks(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const currentMonday=getMondayOf(today);
+  const dispStart=new Date(currentMonday);dispStart.setDate(dispStart.getDate()-14);
+  const dispEnd=new Date(today.getFullYear(),11,31);
+  const weeks=[];let cur=new Date(dispStart);
+  while(cur<=dispEnd){
+    const wStart=new Date(cur),wEnd=new Date(cur);wEnd.setDate(wEnd.getDate()+6);
+    const isPast=wEnd<currentMonday,isCurrent=wStart<=today&&today<=wEnd,isFuture=!isPast&&!isCurrent;
+    const sm=wStart.getMonth(),sy=wStart.getFullYear(),em=wEnd.getMonth(),ey=wEnd.getFullYear();
+    const isStraddle=(sm!==em||sy!==ey);
+    const monthKey=`${sy}-${String(sm+1).padStart(2,'0')}`;
+    const numInOld=getWeekNumInMonth(wStart,sm,sy);
+    const label=isStraddle?`W${numInOld}/W1`:`W${numInOld}`;
+    let straddleSplitPct=null,newMonthLabel=null;
+    if(isStraddle){
+      const lastDay=new Date(sy,sm+1,0).getDate();
+      straddleSplitPct=Math.round(((lastDay-wStart.getDate()+1)/7)*100);
+      newMonthLabel=MONTHS_TH[em];
+    }
+    weeks.push({wStart,wEnd,isPast,isCurrent,isFuture,isStraddle,straddleSplitPct,newMonthLabel,monthKey,label,newMonthIdx:em});
+    cur.setDate(cur.getDate()+7);
+  }
+  return weeks;
+}
+
+/* ════════════════════════════════════════
+   BUILD EVENTS MAP (for Gantt)
+════════════════════════════════════════ */
+function buildEventsMap(data,weeks){
+  const map={};
+  weeks.forEach(w=>{map[weekKey(w.wStart)]=[];});
+  data.forEach(row=>{
+    if(!row.job_name) return;
+    // handle scattered: place in each week that has a date
+    if(row.dateType==='scattered'&&row.dates){
+      const arr=(typeof row.dates==='string'?JSON.parse(row.dates):row.dates)||[];
+      const placed=new Set();
+      arr.forEach(ds=>{
+        const d=new Date(ds);if(isNaN(d))return;d.setHours(0,0,0,0);
+        for(const w of weeks){
+          const k=weekKey(w.wStart);
+          if(d>=w.wStart&&d<=w.wEnd&&!placed.has(k)){placed.add(k);map[k].push({...row,_displayDate:d});break;}
+        }
+      });
+      return;
+    }
+    // single or range: use dateStart
+    const d=new Date(row.dateStart);if(isNaN(d))return;d.setHours(0,0,0,0);
+    if(row.dateType==='range'&&row.dateEnd){
+      // for range: mark all weeks spanned
+      const dEnd=new Date(row.dateEnd);dEnd.setHours(0,0,0,0);
+      for(const w of weeks){
+        if(d<=w.wEnd&&dEnd>=w.wStart) map[weekKey(w.wStart)].push({...row,_displayDate:d});
+      }
+    } else {
+      for(const w of weeks){
+        if(d>=w.wStart&&d<=w.wEnd){map[weekKey(w.wStart)].push({...row,_displayDate:d});break;}
+      }
+    }
+  });
+  Object.keys(map).forEach(k=>map[k].sort((a,b)=>new Date(a.dateStart||0)-new Date(b.dateStart||0)));
+  return map;
+}
+
+/* ════════════════════════════════════════
+   RENDER TIMELINE
+════════════════════════════════════════ */
+function renderTimeline(weeks,eventsMap){
+  const monthOrder=[],monthWeeks={};
+  weeks.forEach(w=>{
+    if(!monthWeeks[w.monthKey]){monthWeeks[w.monthKey]=[];monthOrder.push(w.monthKey);}
+    monthWeeks[w.monthKey].push(w);
+  });
+  const mCls=mk=>monthOrder.indexOf(mk)%2===0?'month-a':'month-b';
+  let html='<table class="tl-table"><thead><tr>';
+  monthOrder.forEach((mk,idx)=>{
+    const[y,m]=mk.split('-').map(Number);
+    const sep=idx<monthOrder.length-1?'border-right:2px solid var(--gray-200);':'';
+    html+=`<th colspan="${monthWeeks[mk].length}" class="tl-month ${mCls(mk)}" style="${sep}">
+      <i class="ti ti-calendar" style="font-size:11px;vertical-align:-1px;margin-right:4px;opacity:.6"></i>${MONTHS_FULL[m-1]} ${y}</th>`;
+  });
+  html+='</tr><tr>';
+  weeks.forEach(w=>{
+    const st=w.isPast?'col-past':w.isCurrent?'col-current':'col-future';
+    const mc=(!w.isPast&&!w.isCurrent)?` ${mCls(w.monthKey)}`:'';
+    const wId=w.isCurrent?'id="week-current"':'';
+    html+=`<th ${wId} class="tl-week ${st}${mc}">
+      <div class="wk-label">${w.label}</div>
+      <div class="wk-range">${weekRangeLabel(w.wStart,w.wEnd)}</div>
+      ${w.isCurrent?'<div class="wk-now-badge">▶ สัปดาห์นี้</div>':''}
+      ${w.isStraddle?`<div class="wk-newmonth-badge"><i class="ti ti-arrow-right" style="font-size:8px"></i>${w.newMonthLabel}</div>`:''}
+    </th>`;
+  });
+  html+='</tr></thead><tbody><tr>';
+  weeks.forEach(w=>{
+    const events=eventsMap[weekKey(w.wStart)]||[];
+    const st=w.isPast?'col-past':w.isCurrent?'col-current':'col-future';
+    const mc=(!w.isPast&&!w.isCurrent)?` ${mCls(w.monthKey)}`:'';
+    let cellStyle='';
+    if(w.isStraddle&&!w.isCurrent){
+      const pct=w.straddleSplitPct;const mIdx=monthOrder.indexOf(w.monthKey);
+      const oB=mIdx%2===0?'var(--month-a-bg)':'var(--month-b-bg)';
+      const nB=mIdx%2===0?'var(--month-b-bg)':'var(--month-a-bg)';
+      cellStyle=`style="background:linear-gradient(to right,${oB} ${pct}%,${nB} ${pct}%)"`;
+    }
+    html+=`<td class="tl-cell ${st}${mc}" ${cellStyle}>`;
+    if(!events.length){html+='<div style="min-height:48px"></div>';}
+    else{
+      let prevMonth=null;
+      events.forEach(ev=>{
+        const d=new Date(ev.dateStart||ev._displayDate||0);
+        const evMonth=isNaN(d)?null:d.getMonth();
+        const cfg=getMCfg(ev.owner);
+        const jobName=(ev.job_name||'—').trim();
+        const dStr=isNaN(d)?'?':shortDate(d);
+        if(w.isStraddle&&prevMonth!==null&&evMonth!==null&&evMonth!==prevMonth)
+          html+='<div class="month-spacer"></div>';
+        prevMonth=evMonth;
+        const dataAttrs=`data-code="${esc(ev.event_code)}"`;
+        if(w.isPast){
+          html+=`<div class="ev-card ev-past" ${dataAttrs} onclick="clickCard(this,event)" title="${esc(jobName)}">
+            <div class="ev-date">${cfg.emoji} ${esc(dStr)}</div>
+            <div class="ev-name">${esc(jobName)}</div></div>`;
+        } else {
+          html+=`<div class="ev-card" ${dataAttrs} onclick="clickCard(this,event)"
+            style="background:${cfg.bg};border-left-color:${cfg.border}" title="${esc(jobName)}">
+            <div class="ev-date" style="color:${cfg.fg}">${cfg.emoji} ${esc(dStr)}</div>
+            <div class="ev-name" style="color:${cfg.fg}">${esc(jobName)}</div></div>`;
+        }
+      });
+    }
+    html+='</td>';
+  });
+  html+='</tr></tbody></table>';
+  document.getElementById('timeline-wrap').innerHTML=html;
+  document.getElementById('timeline-wrap').addEventListener('click',function(e){
+    if(!e.target.closest('.ev-card')) clearSelection();
+  });
+}
+
+/* ════════════════════════════════════════
+   CLICK CARD on Gantt → open Event Card
+════════════════════════════════════════ */
+function clearSelection(){
+  document.querySelectorAll('.ev-card.selected').forEach(c=>c.classList.remove('selected'));
+  selectedCard=null;
+}
+function clickCard(cardEl,e){
+  e.stopPropagation();
+  if(selectedCard===cardEl){clearSelection();return;}
+  clearSelection();
+  cardEl.classList.add('selected');
+  selectedCard=cardEl;
+  openEventCard(cardEl.dataset.code);
+}
+
+/* ════════════════════════════════════════
+   RENDER DETAIL TABLE
+════════════════════════════════════════ */
+function parseJobVenue(jobName){
+  const at=jobName.indexOf('@');
+  if(at<0) return{name:jobName,venue:''};
+  return{name:jobName.slice(0,at).trim(),venue:jobName.slice(at+1).trim()};
+}
+function renderDetailTable(data){
+  const today=new Date();today.setHours(0,0,0,0);
+  // Sort chronologically: events with dates first, then no-date at end
+  allDetailRows=[...data].sort((a,b)=>{
+    const da=getEventDate(a),db=getEventDate(b);
+    if(!da&&!db) return 0;
+    if(!da) return 1;
+    if(!db) return -1;
+    return da-db;
+  });
+  document.getElementById('detail-count').textContent=`${allDetailRows.length} รายการ`;
+  renderDetailRows(allDetailRows);
+}
+function renderDetailRows(rows){
+  const today=new Date();today.setHours(0,0,0,0);
+  const tbody=document.getElementById('detail-tbody');
+  const empty=document.getElementById('detail-empty');
+  if(!rows.length){tbody.innerHTML='';empty.style.display='';return;}
+  empty.style.display='none';
+
+  // Determine row numbering
+  // My Job: sequential 1,2,3...
+  // Team: use EVT number (strip "EVT-" prefix -> parseInt)
+  let seqNum=0;
+  tbody.innerHTML=rows.map((r,i)=>{
+    const d=getEventDate(r);
+    const isPast=d&&d<today;
+    const cfg=getMCfg(r.owner);
+    const {name,venue}=parseJobVenue(r.job_name||'—');
+    const dateStr=formatEventDate(r);
+
+    let numDisplay;
+    if(viewMode==='myjob'){
+      numDisplay=`${++seqNum}`;
+    } else {
+      // EVT-001 → 1
+      const evtNum=parseInt((r.event_code||'').replace(/[^0-9]/g,''),10);
+      numDisplay=isNaN(evtNum)?'—':`${evtNum}`;
+    }
+
+    return`<tr id="drow-${i}" class="${isPast?'row-past':''}"
+      onclick="openEventCard('${esc(r.event_code||'')}')" style="cursor:pointer">
+      <td class="td-num">${numDisplay}</td>
+      <td class="td-owner" title="${cfg.name}">${cfg.emoji}</td>
+      <td class="td-bu">${esc(r.bu||'—')}</td>
+      <td class="td-job">
+        ${esc(name)}
+        ${venue?`<span class="td-job-venue">@ ${esc(venue)}</span>`:''}
+      </td>
+      <td class="td-date">${esc(dateStr)}</td>
+      <td class="td-type">${esc(r.format||'—')}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${financeBadge(r)}</td>
+      <td>
+        <button class="btn-edit-sm" onclick="editFromTable(event,'${esc(r.event_code||'')}')" title="แก้ไข">
+          <i class="ti ti-pencil"></i>
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════
+   FILTER
+════════════════════════════════════════ */
+function filterDetail(){
+  const q=document.getElementById('search-box').value.trim().toLowerCase();
+  const filtered=!q?allDetailRows:allDetailRows.filter(r=>
+    ['job_name','agency_name','bu','memo','note'].some(k=>(r[k]||'').toLowerCase().includes(q))
+  );
+  document.getElementById('detail-count').textContent=`${filtered.length} รายการ`;
+  renderDetailRows(filtered);
+}
+
+/* ════════════════════════════════════════
+   EVENT CARD POPUP
+════════════════════════════════════════ */
+function openEventCard(code){
+  if(!code) return;
+  const r=EVENTS_DATA.find(x=>x.event_code===code);
+  if(!r) return;
+  openCardCode=code;
+  const cfg=getMCfg(r.owner);
+  const {name,venue}=parseJobVenue(r.job_name||'—');
+
+  // Header
+  document.getElementById('ec-ref').textContent=r.event_code||'';
+  document.getElementById('ec-title').textContent=name;
+  const venueEl=document.getElementById('ec-venue');
+  if(venue){venueEl.textContent='@ '+venue;venueEl.style.display='';}
+  else{venueEl.style.display='none';}
+
+  // Badges (owner + status + finance)
+  const ownerBadge=`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${cfg.bg};color:${cfg.fg};">${cfg.emoji} ${cfg.name}</span>`;
+  const sBadge=statusBadge(r.status);
+  const fBadge=financeBadge(r);
+  document.getElementById('ec-badges').innerHTML=`${ownerBadge} ${sBadge} ${fBadge}`;
+
+  // Grid fields
+  const fields=[
+    {label:'BU',val:r.bu||'—'},
+    {label:'วันที่จัดงาน',val:formatEventDate(r)||'—'},
+    {label:'ประเภทงาน',val:r.format||'—'},
+    {label:'Agency',val:r.agency_name||'—'},
+    {label:'Budget',val:r.budget?fmtMoney(r.budget):'—'},
+    {label:'Reach',val:r.reach_actual?Number(r.reach_actual).toLocaleString('th-TH')+' คน':'—'},
+    {label:'Serves',val:r.serves&&r.serves!=='0'?Number(r.serves).toLocaleString('th-TH')+' คน':'—'},
+    {label:'Brand Owner',val:r.brandOwner||'—'},
+  ];
+  document.getElementById('ec-grid').innerHTML=fields.map(f=>
+    `<div class="ecard-field">
+      <div class="ecard-field-label">${esc(f.label)}</div>
+      <div class="ecard-field-val${f.val==='—'?' muted':''}">${esc(f.val)}</div>
+    </div>`
+  ).join('');
+
+  // Memo
+  const memo=(r.memo||r.note||'').trim();
+  const memoEl=document.getElementById('ec-memo');
+  if(memo){memoEl.textContent=memo;memoEl.style.display='';}
+  else{memoEl.style.display='none';}
+
+  // Show overlay
+  document.getElementById('ecard-overlay').classList.add('open');
+}
+function closeEventCard(){
+  document.getElementById('ecard-overlay').classList.remove('open');
+  openCardCode=null;
+}
+function overlayClickEcard(e){
+  if(e.target===document.getElementById('ecard-overlay')) closeEventCard();
+}
+function editFromCard(){
+  // For now: toast message (will be wired to workspace in full integration)
+  closeEventCard();
+  const toast=document.createElement('div');
+  toast.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3)';
+  toast.textContent='กรุณาแก้ไขผ่านหน้า Workspace';
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(),2500);
+}
+function editFromTable(e,code){
+  e.stopPropagation();
+  editFromCard(); // same message for now
+}
+
+/* ════════════════════════════════════════
+   SCROLL TO TODAY
+════════════════════════════════════════ */
+function scrollToToday(){
+  const el=document.getElementById('week-current');
+  if(el) el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'});
+}
+
+/* ════════════════════════════════════════
+   RESIZER
+════════════════════════════════════════ */
+(function initResizer(){
+  const resizer=document.getElementById('resizer');
+  const topPane=document.getElementById('top-pane');
+  const navH=()=>document.querySelector('.navbar').offsetHeight;
+  let dragging=false;
+  resizer.addEventListener('mousedown',e=>{dragging=true;document.body.style.cursor='row-resize';document.body.style.userSelect='none';e.preventDefault();});
+  document.addEventListener('mousemove',e=>{if(!dragging)return;const newH=e.clientY-navH();const min=130,max=window.innerHeight-navH()-160;if(newH>=min&&newH<=max)topPane.style.height=newH+'px';});
+  document.addEventListener('mouseup',()=>{if(!dragging)return;dragging=false;document.body.style.cursor='';document.body.style.userSelect='';});
+})();
+
+/* ════════════════════════════════════════
+   SPLASH
+════════════════════════════════════════ */
+(function initSplash(){
+  const M=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const D=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const n=new Date();
+  document.getElementById('sp-dl').textContent=D[n.getDay()]+', '+n.getDate()+' '+M[n.getMonth()]+' '+n.getFullYear();
+  const IDS=['sp-g','sp-sl','sp-tl','sp-dl','sp-btn'],DELAYS=[0,280,560,820,1050];
+  IDS.forEach((id,i)=>setTimeout(()=>{const el=document.getElementById(id);if(el)el.classList.add('s-in');},DELAYS[i]+300));
+  const splashEl=document.getElementById('splash-screen'),contentEl=document.getElementById('splash-content');
+  splashEl.addEventListener('mousemove',function(e){
+    const r=splashEl.getBoundingClientRect();
+    const dx=(e.clientX-r.left-r.width/2)/(r.width/2),dy=(e.clientY-r.top-r.height/2)/(r.height/2);
+    contentEl.style.transform=`translate(${dx*6}px,${dy*4}px)`;
+  });
+  splashEl.addEventListener('mouseleave',()=>{contentEl.style.transform='translate(0,0)';});
+  const btn=document.getElementById('splash-btn-enter');
+  btn.addEventListener('click',function(e){
+    const r=document.createElement('span');r.className='splash-ripple';
+    const rect=this.getBoundingClientRect();r.style.left=(e.clientX-rect.left)+'px';r.style.top=(e.clientY-rect.top)+'px';
+    this.appendChild(r);setTimeout(()=>r.remove(),700);
+    setTimeout(()=>{splashEl.classList.add('slide-away');setTimeout(()=>{splashEl.style.display='none';},800);},180);
+  });
+})();
+
+/* ════════════════════════════════════════
+   RENDER ALL (called on view/member change)
+════════════════════════════════════════ */
+function renderAll(){
+  const data=getDisplayData();
+  const weeks=generateDisplayWeeks();
+  const eventsMap=buildEventsMap(data,weeks);
+  renderTeamLegend();
+  renderSummaryBar(EVENTS_DATA); // always show all members stats
+  renderTimeline(weeks,eventsMap);
+  renderDetailTable(data);
+  setTimeout(scrollToToday,150);
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+function init(){
+  document.getElementById('nav-date').textContent=`Update as: ${longDate(new Date())}`;
+  initMemberPicker();
+  loadEventsAndRender();   // โหลดข้อมูลจาก Supabase (หรือ fallback) แล้วค่อยวาดหน้าจอครั้งแรก
+  subscribeRealtime();     // ฟังการเปลี่ยนแปลงสด เช่น เมื่อทีมกรอกข้อมูลใหม่จาก Member Workspace
+}
+init();
+
+/* ESC key closes event card */
+document.addEventListener('keydown',e=>{if(e.key==='Escape') closeEventCard();});
+</script>
+</body>
+</html>
