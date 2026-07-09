@@ -26,6 +26,8 @@
     .navbar-date{color:rgba(255,255,255,.75);font-size:11px;background:rgba(255,255,255,.14);padding:3px 10px;border-radius:20px}
     .btn-today{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
     .btn-today:hover{background:rgba(255,255,255,.3)}
+    .btn-home{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;text-decoration:none}
+    .btn-home:hover{background:rgba(255,255,255,.3)}
 
     /* MAIN */
     .main{display:flex;flex-direction:column;height:calc(100vh - var(--navbar-h));overflow:hidden}
@@ -251,6 +253,9 @@
 
 <!-- NAVBAR -->
 <nav class="navbar">
+  <a class="btn-home" href="./index.html" title="กลับหน้า Home">
+    <i class="ti ti-home" style="font-size:12px"></i>Home
+  </a>
   <i class="ti ti-layout-dashboard navbar-icon"></i>
   <div class="navbar-title">Overview — Brand Event 2026</div>
   <button class="btn-today" onclick="scrollToToday()">
